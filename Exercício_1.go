@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // Função que retorna se o número é positivo, negativo ou zero
 func VerifNum(n int) string {
@@ -18,7 +16,7 @@ func main() {
 	var numero int
 
 	fmt.Print("Digite um número: ")
-	fmt.Scan(&numero)
+	fmt.Scanln(&numero)
 
 	fmt.Println("O número é:", VerifNum(numero))
 }
