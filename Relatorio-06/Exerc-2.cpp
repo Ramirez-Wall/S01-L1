@@ -50,7 +50,7 @@ public:
         if (r >= 0 && r <= 10)
             rank = r;
         else
-            rank = 0; // padrão
+            rank = 0; 
     }
 
     int getRank() const { return rank; }
