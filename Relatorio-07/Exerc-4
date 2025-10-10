@@ -1,0 +1,67 @@
+using System;
+
+namespace MonstrosSombrioApp
+{
+    //Classe abstrata
+    abstract class MonstroSombrio
+    {
+        public string Nome { get; set; }
+
+        public MonstroSombrio(string nome)
+        {
+            Nome = nome;
+        }
+
+        //Método virtual
+        public virtual void Mover()
+        {
+            Console.WriteLine($"{Nome} se move nas sombras...");
+        }
+    }
+
+    //Classe Zumbi herdando de MonstroSombrio
+    class Zumbi : MonstroSombrio
+    {
+        public Zumbi(string nome) : base(nome) { }
+
+        //Sobrescreve usando método Mover()
+        public override void Mover()
+        {
+            Console.WriteLine($"{Nome} anda lentamente, arrastando os pés...");
+        }
+    }
+
+    //Classe Espectro herdando de MonstroSombrio
+    class Espectro : MonstroSombrio
+    {
+        public Espectro(string nome) : base(nome) { }
+
+        //Sobrescreve no método Mover()
+        public override void Mover()
+        {
+            Console.WriteLine($"{Nome} desliza silenciosamente pelo ar...");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Array do tipo da classe mãe
+            MonstroSombrio[] monstros = new MonstroSombrio[]
+            {
+                new Zumbi("Zumbi Apodrecido"),
+                new Espectro("Espectro da Floresta")
+            };
+
+            //Percorrendo o array e chamando o método Mover()
+            Console.WriteLine("Movimentação dos monstros:\n");
+            foreach (var monstro in monstros)
+            {
+                monstro.Mover(); //polimorfismo
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
