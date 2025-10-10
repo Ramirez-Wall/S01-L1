@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+
+namespace Pokemons
+{
+
+    class Pokemon
+    {
+        public string Nome { get; set; }
+
+        public Pokemon(string nome)
+        {
+            Nome = nome;
+        }
+
+        //Método virtual
+        public virtual void Atacar()
+        {
+            Console.WriteLine($"{Nome} realiza um ataque genérico!");
+        }
+    }
+
+    //Classe filha: Pokémon de Fogo
+    class PokemonDeFogo : Pokemon
+    {
+        public PokemonDeFogo(string nome) : base(nome) { }
+
+        //Sobrescreve no método Atacar()
+        public override void Atacar()
+        {
+            Console.WriteLine($"{Nome} lança uma rajada de fogo!");
+        }
+    }
+
+    //Classe filha: Pokémon de Água
+    class PokemonDeAgua : Pokemon
+    {
+        public PokemonDeAgua(string nome) : base(nome) { }
+
+        //Sobrescreve no método Atacar()
+        public override void Atacar()
+        {
+            Console.WriteLine($"{Nome} lança um jato de água!");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Criação da lista do tipo da classe mãe
+            List<Pokemon> pokemons = new List<Pokemon>();
+
+            //Adição de instâncias à lista
+            pokemons.Add(new PokemonDeFogo("Charizard"));
+            pokemons.Add(new PokemonDeAgua("Blastoise"));
+
+            //Percorrendo a lista e chamando o método Atacar()
+            foreach (var p in pokemons)
+            {
+                p.Atacar();
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
