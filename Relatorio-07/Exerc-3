@@ -1,0 +1,111 @@
+using System;
+using System.Collections.Generic;
+
+namespace Magia
+{
+    //Classe Feitico
+    class Feitico
+    {
+        public string Nome { get; set; }
+        public string Efeito { get; set; }
+
+        public Feitico(string nome, string efeito)
+        {
+            Nome = nome;
+            Efeito = efeito;
+        }
+
+        public void Exibir()
+        {
+            Console.WriteLine($"Feitiço: {Nome} - Efeito: {Efeito}");
+        }
+    }
+
+    //Classe Grimorio
+    class Grimorio
+    {
+        private List<Feitico> feitiços;
+
+        public Grimorio()
+        {
+            feitiços = new List<Feitico>();
+        }
+
+        public void AdicionarFeitico(Feitico f)
+        {
+            feitiços.Add(f);
+        }
+
+        public void ListarFeiticos()
+        {
+            Console.WriteLine("\n--- Grimório de Feitiços ---");
+            foreach (var f in feitiços)
+            {
+                f.Exibir();
+            }
+        }
+    }
+
+    //Classe Ferramenta
+    class Ferramenta
+    {
+        public string Nome { get; set; }
+
+        public Ferramenta(string nome)
+        {
+            Nome = nome;
+        }
+    }
+
+    //Classe Maga — compõe Grimorio e agrega Ferramentas
+    class Maga
+    {
+        public string Nome { get; set; }
+        public Grimorio Grimorio { get; private set; }
+        public List<Ferramenta> Ferramentas { get; set; }
+
+        public Maga(string nome, List<Ferramenta> ferramentas)
+        {
+            Nome = nome;
+            Grimorio = new Grimorio(); // composição: sempre existe com a Maga
+            Ferramentas = ferramentas; // agregação: passada de fora
+        }
+
+        public void MostrarFerramentas()
+        {
+            Console.WriteLine($"\nFerramentas de {Nome}:");
+            foreach (var f in Ferramentas)
+            {
+                Console.WriteLine($"- {f.Nome}");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Criação da lista de Ferramentas
+            List<Ferramenta> ferramentas = new List<Ferramenta>
+            {
+                new Ferramenta("Cajado Mágico"),
+                new Ferramenta("Lanterna"),
+                new Ferramenta("Manto Antimagia")
+            };
+
+            //Criação da Maga Frieren
+            Maga frieren = new Maga("Frieren", ferramentas);
+
+            //Adicionando feitiços ao Grimório
+            frieren.Grimorio.AdicionarFeitico(new Feitico("Luz Sagrada", "Ilumina locais escuros"));
+            frieren.Grimorio.AdicionarFeitico(new Feitico("Raio Gélido", "Congela inimigos à distância"));
+            frieren.Grimorio.AdicionarFeitico(new Feitico("Escudo Arcano", "Cria uma barreira protetora"));
+
+            //Exibindo dados
+            frieren.Grimorio.ListarFeiticos();
+            frieren.MostrarFerramentas();
+
+            Console.ReadLine();
+        }
+    }
+}
