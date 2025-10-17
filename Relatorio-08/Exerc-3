@@ -1,0 +1,51 @@
+#Classe ArmaCorpoACorpo (Composição)
+class ArmaCorpoACorpo:
+    def __init__(self, nome: str, dano: int):
+        self.nome = nome
+        self.dano = dano
+
+    def __str__(self):
+        return f"Arma: {self.nome} (Dano: {self.dano})"
+
+
+#Classe PhantomThieves (Agregação)
+class PhantomThieves:
+    def __init__(self, nome: str, arma: ArmaCorpoACorpo):
+        self.nome = nome
+        self.arma = arma  #Referência ao objeto existente
+
+    def __str__(self):
+        return f"{self.nome} - {self.arma}"
+
+
+#Classe Joker
+class Joker:
+    def __init__(self, equipe: list):
+        # Composição - Joker cria e gerencia sua própria arma
+        self.arma = ArmaCorpoACorpo("Punhal do Vazio", 120)
+        # Agregação - Recebe uma lista de PhantomThieves
+        self.equipe = equipe
+
+    #Método para mostrar a equipe
+    def mostrar_equipe(self):
+        print(f"Joker empunha {self.arma}")
+        print("Equipe dos Phantom Thieves:")
+        for membro in self.equipe:
+            print(f" - {membro}")
+
+
+#Main
+if __name__ == "__main__":
+    #Criando armas separadas (para os membros)
+    arma1 = ArmaCorpoACorpo("Emma", 90)
+    arma2 = ArmaCorpoACorpo("Punhos da Sabedoria", 999)
+
+    #Criando membros (agregação - usam armas externas)
+    membro1 = PhantomThieves("Carecao", arma2)
+    membro2 = PhantomThieves("Zoro", arma1)
+
+    #Criando o Joker com a lista de membros
+    joker = Joker([membro1, membro2])
+
+    #Mostrando toda a equipe
+    joker.mostrar_equipe()
