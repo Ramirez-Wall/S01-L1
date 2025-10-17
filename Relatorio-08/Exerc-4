@@ -1,0 +1,68 @@
+from abc import ABC, abstractmethod
+
+#Interface base Cibernetico
+class Cibernetico(ABC):
+    @abstractmethod
+    def realizar_hack(self):
+        pass
+
+
+#Classe Implante(Composição)
+class Implante:
+    def __init__(self, custo: int, funcao: str):
+        self.custo = custo
+        self.funcao = funcao
+
+    def __str__(self):
+        return f"Implante ({self.funcao}, custo: {self.custo} créditos)"
+
+
+#Classe NetRunner que herda de Cibernetico
+class NetRunner(Cibernetico):
+    def __init__(self, nome: str):
+        self.nome = nome
+        #Composição - o NetRunner cria e controla seu próprio implante
+        self.implante = Implante(1500, "NeuralLink de invasão")
+
+    #Implementação do método abstrato
+    def realizar_hack(self):
+        print(f"{self.nome} usa {self.implante.funcao} para invadir sistemas corporativos")
+
+    def __str__(self):
+        return f"NetRunner {self.nome} com {self.implante}"
+
+
+#Classe Faccao(Agregação)
+class Faccao:
+    def __init__(self, nome: str, membros: list[Cibernetico]):
+        self.nome = nome
+        #Agregação - mantém uma lista de cibernéticos(NetRunners)
+        self.membros = membros
+
+    def adicionar_membro(self, membro: Cibernetico):
+        self.membros.append(membro)
+
+    def coordenar_ataque(self):
+        print(f"\nFacção {self.nome} iniciou uma operação de hacking coordenada!\n")
+        for membro in self.membros:
+            membro.realizar_hack()
+
+
+#Main
+if __name__ == "__main__":
+    # Criando NetRunners(cada um com seu próprio Implante - composição)
+    n1 = NetRunner("Vex")
+    n2 = NetRunner("Nyx")
+    n3 = NetRunner("Zero")
+
+    #Criando a Fac(agregação)
+    faccao = Faccao("zHackers", [n1, n2])
+    faccao.adicionar_membro(n3)
+
+    #Mostrando os membros
+    print("Membros da facção:")
+    for membro in faccao.membros:
+        print(" -", membro)
+
+    #Ordem para atacar(todos realizam hack)
+    faccao.coordenar_ataque()
