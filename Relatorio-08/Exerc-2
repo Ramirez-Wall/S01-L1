@@ -1,0 +1,47 @@
+from abc import ABC, abstractmethod
+
+#Classe base Heroi
+class Heroi(ABC):
+    def __init__(self, nome: str, funcao: str):
+        self.nome = nome
+        self.funcao = funcao
+
+    #Método abstrato (obrigatório nas classes filhas)
+    @abstractmethod
+    def usar_ultimate(self):
+        pass #Indica que é uma instrução vazia, que será sobrescrita
+
+    def __str__(self):
+        return f"Herói: {self.nome} ({self.funcao})"
+
+
+#Classe filha Tanque
+class Tanque(Heroi):
+    def __init__(self, nome: str):
+        super().__init__(nome, "Tanque")
+
+    #Sobrescrevendo o método
+    def usar_ultimate(self):
+        print(f"Vou tankar Geral! ")
+
+
+#Classe filha Dano
+class Dano(Heroi):
+    def __init__(self, nome: str):
+        super().__init__(nome, "Dano")
+
+    #Sobrescrevendo o método
+    def usar_ultimate(self):
+        print(f"Chuva de DPS nos newba! ")
+
+
+#Main
+if __name__ == "__main__":
+    herois = [
+        Tanque("Brutus"),
+        Dano("Slinger"),
+    ]
+
+    for heroi in herois:
+        print(heroi)
+        heroi.usar_ultimate()
