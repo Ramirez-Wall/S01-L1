@@ -1,0 +1,97 @@
+# 1. Classe MicroondasUnidade (Composição)
+class MicroondasUnidade
+  def initialize(potencia)
+    @potencia = potencia
+  end
+
+  def aquecer_por(segundos)
+    puts "🔆 A unidade de micro-ondas aquece por #{segundos} segundos na potência #{@potencia}."
+  end
+
+  def to_s
+    "Micro-ondas (Potência: #{@potencia})"
+  end
+end
+
+# 2. Classe DMail (Agregação)
+class DMail
+  attr_reader :conteudo, :hora_envio
+
+  def initialize(conteudo, hora_envio)
+    @conteudo = conteudo
+    @hora_envio = hora_envio
+  end
+
+  def to_s
+    "D-Mail: '#{@conteudo}' enviado às #{@hora_envio}"
+  end
+end
+
+# 3. Classe TelefoneDeMicroondas
+class TelefoneDeMicroondas
+  def initialize(potencia_unidade)
+    # Composição: o telefone contém internamente a unidade
+    @unidade = MicroondasUnidade.new(potencia_unidade)
+    # Agregação: o telefone tem uma coleção de D-Mails (que podem existir fora dele)
+    @dmails = []
+  end
+
+  # 4. Método enviar_dmail
+  def enviar_dmail
+    puts "\n📨 Escreva o conteúdo do D-Mail:"
+    conteudo = gets.chomp
+
+    puts "⏰ Digite o horário de envio (formato HH:MM):"
+    hora_envio = gets.chomp
+
+    # Simula o uso do micro-ondas antes do envio
+    @unidade.aquecer_por(30)
+
+    # Cria o D-Mail e adiciona à lista
+    dmail = DMail.new(conteudo, hora_envio)
+    @dmails << dmail
+
+    puts "✅ D-Mail enviado com sucesso!"
+  end
+
+  # 5. Método listar_dmails
+  def listar_dmails(horario_corte)
+    puts "\n🕒 Listando D-Mails enviados após #{horario_corte}...\n"
+    filtrados = @dmails.select { |dmail| dmail.hora_envio > horario_corte }
+
+    if filtrados.empty?
+      puts "Nenhum D-Mail encontrado após #{horario_corte}."
+    else
+      filtrados.each { |dmail| puts dmail }
+    end
+
+    filtrados
+  end
+end
+
+# --- Programa Principal ---
+puts "📞 Inicializando Telefone de Micro-ondas..."
+telefone = TelefoneDeMicroondas.new(800)
+
+loop do
+  puts "\n--- MENU ---"
+  puts "1. Enviar novo D-Mail"
+  puts "2. Listar D-Mails após um horário"
+  puts "3. Sair"
+  print "Escolha: "
+  opcao = gets.chomp
+
+  case opcao
+  when "1"
+    telefone.enviar_dmail
+  when "2"
+    print "Digite o horário de corte (HH:MM): "
+    corte = gets.chomp
+    telefone.listar_dmails(corte)
+  when "3"
+    puts "Encerrando o programa. 👋"
+    break
+  else
+    puts "Opção inválida!"
+  end
+end

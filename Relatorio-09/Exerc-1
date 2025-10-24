@@ -1,0 +1,70 @@
+# 1. Classe base Drink
+class Drink
+  # attr_reader apenas para nome
+  attr_reader :nome
+
+  def initialize(nome, preco_base)
+    @nome = nome
+    self.preco_base = preco_base # usa o setter para validar
+  end
+
+  # Getter explícito para preco_base
+  def preco_base
+    @preco_base
+  end
+
+  # Setter explícito com validação
+  def preco_base=(valor)
+    if valor.to_f > 0
+      @preco_base = valor.to_f
+    else
+      raise ArgumentError, "O preço base deve ser positivo."
+    end
+  end
+
+  # Método de cálculo de preço final (pode ser sobrescrito)
+  def preco_final
+    @preco_base
+  end
+
+  # Método to_s (equivalente a __str__)
+  def to_s
+    "Drink: #{@nome}, Preço Base: $#{'%.2f' % @preco_base}"
+  end
+end
+
+# 3. Subclasse DrinkLenda
+class DrinkLenda < Drink
+  def initialize(nome, preco_base, anos_desde_criacao)
+    super(nome, preco_base)
+    @anos_desde_criacao = anos_desde_criacao.to_i
+  end
+
+  # 4. Sobrescreve o cálculo do preço final
+  def preco_final
+    @preco_base + (5 * @anos_desde_criacao)
+  end
+
+  # 5. to_s sobrescrito
+  def to_s
+    "Drink Lenda: #{@nome}, Preço Base: $#{'%.2f' % @preco_base}, " \
+    "Anos: #{@anos_desde_criacao}, Preço Final: $#{'%.2f' % preco_final}"
+  end
+end
+
+# 6. Programa principal (main)
+puts "Digite o nome do drink:"
+nome = gets.chomp
+
+puts "Digite o preço base do drink:"
+preco = gets.chomp.to_f
+
+puts "Digite a idade do drink (anos desde criação):"
+anos = gets.chomp.to_i
+
+# Cria o objeto DrinkLenda
+drink_lenda = DrinkLenda.new(nome, preco, anos)
+
+# Exibe resultado
+puts "\n--- Resultado ---"
+puts drink_lenda

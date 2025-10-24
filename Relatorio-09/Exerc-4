@@ -1,0 +1,105 @@
+# 1. Modules
+module Rastreavel
+  def obter_localizacao(hora)
+    "Localização de #{self.class}: #{@localizacao} às #{hora}"
+  end
+end
+
+module Perigoso
+  def calcular_risco
+    raise NotImplementedError, "Subclasse deve implementar calcular_risco"
+  end
+end
+
+# 2. Classe base Participante
+class Participante
+  attr_accessor :nome, :localizacao
+
+  def initialize(nome)
+    @nome = nome
+    @localizacao = "Desconhecida"
+  end
+
+  def to_s
+    "#{@nome} (#{self.class})"
+  end
+end
+
+# 3. Classes Detetive e MestreDoCrime
+class Detetive < Participante
+  include Rastreavel
+
+  def investigar
+    "#{@nome} está investigando pistas..."
+  end
+end
+
+class MestreDoCrime < Participante
+  include Rastreavel
+  include Perigoso
+
+  def calcular_risco
+    # Apenas um exemplo simples de cálculo
+    rand(50..100)
+  end
+end
+
+# 4. Classe Cenario
+class Cenario
+  def initialize
+    @participantes = []
+  end
+
+  def adicionar_participante(participante)
+    @participantes << participante
+  end
+
+  def listar_participantes
+    puts "\n--- Participantes no cenário ---"
+    @participantes.each { |p| puts p }
+  end
+
+  # 5. Método identificar_ameacas
+  def identificar_ameacas
+    perigosos = @participantes.select { |p| p.respond_to?(:calcular_risco) }
+    if perigosos.empty?
+      puts "\nNenhum criminoso identificado."
+    else
+      puts "\n⚠️ Alvos perigosos detectados:"
+      perigosos.each do |alvo|
+        puts "- #{alvo.nome} (Risco: #{alvo.calcular_risco})"
+      end
+    end
+    perigosos
+  end
+end
+
+# --- Programa principal (main) ---
+puts "🕵️ Iniciando simulação de rastreamento..."
+
+# Cria instâncias dos personagens
+sherlock = Detetive.new("Sherlock Holmes")
+moriarty = MestreDoCrime.new("Moriarty")
+
+# Coleta localizações
+print "Digite a localização atual de Sherlock: "
+sherlock.localizacao = gets.chomp
+
+print "Digite a localização atual de Moriarty: "
+moriarty.localizacao = gets.chomp
+
+# Cria cenário e adiciona participantes
+cenario = Cenario.new
+cenario.adicionar_participante(sherlock)
+cenario.adicionar_participante(moriarty)
+
+# Exibe lista e rastreamento
+cenario.listar_participantes
+
+puts "\n📍 Rastreamento de localizações:"
+hora_atual = "14:30"
+puts sherlock.obter_localizacao(hora_atual)
+puts moriarty.obter_localizacao(hora_atual)
+
+# Identifica ameaças
+cenario.identificar_ameacas
