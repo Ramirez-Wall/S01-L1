@@ -1,11 +1,11 @@
-# 1. Classe MicroondasUnidade (Composição)
+#Classe MicroondasUnidade (Composição)
 class MicroondasUnidade
   def initialize(potencia)
     @potencia = potencia
   end
 
   def aquecer_por(segundos)
-    puts "🔆 A unidade de micro-ondas aquece por #{segundos} segundos na potência #{@potencia}."
+    puts "A unidade de micro-ondas aquece por #{segundos} segundos na potência #{@potencia}."
   end
 
   def to_s
@@ -13,7 +13,7 @@ class MicroondasUnidade
   end
 end
 
-# 2. Classe DMail (Agregação)
+#Classe DMail (Agregação)
 class DMail
   attr_reader :conteudo, :hora_envio
 
@@ -27,36 +27,36 @@ class DMail
   end
 end
 
-# 3. Classe TelefoneDeMicroondas
+#Classe TelefoneDeMicroondas
 class TelefoneDeMicroondas
   def initialize(potencia_unidade)
-    # Composição: o telefone contém internamente a unidade
+    #Composição: o telefone contém internamente a unidade
     @unidade = MicroondasUnidade.new(potencia_unidade)
-    # Agregação: o telefone tem uma coleção de D-Mails (que podem existir fora dele)
+    #Agregação: o telefone tem uma coleção de D-Mails (que podem existir fora dele)
     @dmails = []
   end
 
-  # 4. Método enviar_dmail
+  #Método enviar_dmail
   def enviar_dmail
-    puts "\n📨 Escreva o conteúdo do D-Mail:"
+    puts "\nEscreva o conteúdo do D-Mail:"
     conteudo = gets.chomp
 
-    puts "⏰ Digite o horário de envio (formato HH:MM):"
+    puts "Digite o horário de envio (formato HH:MM):"
     hora_envio = gets.chomp
 
-    # Simula o uso do micro-ondas antes do envio
+    #Simula o uso do micro-ondas antes do envio
     @unidade.aquecer_por(30)
 
-    # Cria o D-Mail e adiciona à lista
+    #Cria o D-Mail e adiciona à lista
     dmail = DMail.new(conteudo, hora_envio)
     @dmails << dmail
 
-    puts "✅ D-Mail enviado com sucesso!"
+    puts "D-Mail enviado com sucesso!"
   end
 
-  # 5. Método listar_dmails
+  #Método listar_dmails
   def listar_dmails(horario_corte)
-    puts "\n🕒 Listando D-Mails enviados após #{horario_corte}...\n"
+    puts "\nListando D-Mails enviados após #{horario_corte}...\n"
     filtrados = @dmails.select { |dmail| dmail.hora_envio > horario_corte }
 
     if filtrados.empty?
@@ -69,8 +69,8 @@ class TelefoneDeMicroondas
   end
 end
 
-# --- Programa Principal ---
-puts "📞 Inicializando Telefone de Micro-ondas..."
+#Main
+puts "Inicializando Telefone de Micro-ondas..."
 telefone = TelefoneDeMicroondas.new(800)
 
 loop do
@@ -89,7 +89,7 @@ loop do
     corte = gets.chomp
     telefone.listar_dmails(corte)
   when "3"
-    puts "Encerrando o programa. 👋"
+    puts "Encerrando o programa."
     break
   else
     puts "Opção inválida!"

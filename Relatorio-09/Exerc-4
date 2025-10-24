@@ -1,4 +1,4 @@
-# 1. Modules
+#Modules
 module Rastreavel
   def obter_localizacao(hora)
     "Localização de #{self.class}: #{@localizacao} às #{hora}"
@@ -11,7 +11,7 @@ module Perigoso
   end
 end
 
-# 2. Classe base Participante
+#Classe base Participante
 class Participante
   attr_accessor :nome, :localizacao
 
@@ -25,7 +25,7 @@ class Participante
   end
 end
 
-# 3. Classes Detetive e MestreDoCrime
+#Classes Detetive e MestreDoCrime
 class Detetive < Participante
   include Rastreavel
 
@@ -39,12 +39,12 @@ class MestreDoCrime < Participante
   include Perigoso
 
   def calcular_risco
-    # Apenas um exemplo simples de cálculo
+    #Apenas um exemplo simples
     rand(50..100)
   end
 end
 
-# 4. Classe Cenario
+#Classe Cenario
 class Cenario
   def initialize
     @participantes = []
@@ -59,13 +59,13 @@ class Cenario
     @participantes.each { |p| puts p }
   end
 
-  # 5. Método identificar_ameacas
+  #Método identificar_ameacas
   def identificar_ameacas
     perigosos = @participantes.select { |p| p.respond_to?(:calcular_risco) }
     if perigosos.empty?
       puts "\nNenhum criminoso identificado."
     else
-      puts "\n⚠️ Alvos perigosos detectados:"
+      puts "\nAlvos perigosos detectados:"
       perigosos.each do |alvo|
         puts "- #{alvo.nome} (Risco: #{alvo.calcular_risco})"
       end
@@ -74,14 +74,14 @@ class Cenario
   end
 end
 
-# --- Programa principal (main) ---
+#Main
 puts "🕵️ Iniciando simulação de rastreamento..."
 
-# Cria instâncias dos personagens
+#Cria instâncias dos personagens
 sherlock = Detetive.new("Sherlock Holmes")
 moriarty = MestreDoCrime.new("Moriarty")
 
-# Coleta localizações
+#Coleta localizações
 print "Digite a localização atual de Sherlock: "
 sherlock.localizacao = gets.chomp
 
@@ -96,10 +96,10 @@ cenario.adicionar_participante(moriarty)
 # Exibe lista e rastreamento
 cenario.listar_participantes
 
-puts "\n📍 Rastreamento de localizações:"
+puts "\nRastreamento de localizações:"
 hora_atual = "14:30"
 puts sherlock.obter_localizacao(hora_atual)
 puts moriarty.obter_localizacao(hora_atual)
 
-# Identifica ameaças
+#Identifica ameaças
 cenario.identificar_ameacas

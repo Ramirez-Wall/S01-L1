@@ -1,4 +1,4 @@
-# 1. Classe base Musico
+#Classe base Musico
 class Musico
   attr_reader :nome, :instrumento
 
@@ -7,7 +7,7 @@ class Musico
     @instrumento = instrumento
   end
 
-  # Método abstrato — deve ser sobrescrito nas subclasses
+  #Método abstrato — deve ser sobrescrito nas subclasses
   def tocar_partitura(peca)
     raise NotImplementedError, "O método tocar_partitura deve ser implementado nas subclasses."
   end
@@ -17,7 +17,7 @@ class Musico
   end
 end
 
-# 2. Classes filhas Pianista e Violinista
+#Classes filhas Pianista e Violinista
 class Pianista < Musico
   def initialize(nome)
     super(nome, "Piano")
@@ -38,22 +38,22 @@ class Violinista < Musico
   end
 end
 
-# 3. Classe Maestro
+#Classe Maestro
 class Maestro
   def initialize(nome, musicos)
     @nome = nome
     @musicos = musicos
   end
 
-  # 4. Método iniciar_ensaio(peca)
+  #Método iniciar_ensaio(peca)
   def iniciar_ensaio(peca)
-    puts "\n🎵 Maestro #{@nome} inicia o ensaio da peça '#{peca}'..."
+    puts "\n Maestro #{@nome} inicia o ensaio da peça '#{peca}'..."
     @musicos.each do |musico|
       puts musico.tocar_partitura(peca)  # Polimorfismo em ação
     end
   end
 
-  # 5. Método mudar_foco(estado)
+  #Método mudar_foco(estado)
   def mudar_foco(estado)
     @musicos.map do |musico|
       "#{musico.nome} agora está #{estado}!"
@@ -61,23 +61,23 @@ class Maestro
   end
 end
 
-# 6. Programa principal (main)
+#Main
 puts "Digite o nome da peça a ser ensaiada:"
 peca = gets.chomp
 
-# Cria alguns músicos
+#Cria músicos
 musicos = [
   Pianista.new("Kousei"),
   Violinista.new("Kaori")
 ]
 
-# Cria o maestro
+#Cria o maestro
 maestro = Maestro.new("Takeshi", musicos)
 
-# Inicia o ensaio
+#Inicia o ensaio
 maestro.iniciar_ensaio(peca)
 
-# Muda o foco dos músicos
+#Muda o foco dos músicos
 puts "\n--- Mudando foco dos músicos ---"
 mensagens_foco = maestro.mudar_foco("Concentrado")
 mensagens_foco.each { |msg| puts msg }
