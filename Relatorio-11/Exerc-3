@@ -1,0 +1,150 @@
+import java.util.HashMap;
+
+//INTERFACE
+interface Rastreavel {
+    String obterCoordenadas();
+}
+
+// CLASSE PODER
+class Poder {
+    private String nome;
+
+    public Poder(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
+    }
+}
+
+//CLASSE BASE
+abstract class Entidade implements Rastreavel {
+    protected String nome;
+    protected String localizacao;
+    protected Poder poder;
+
+    public Entidade(String nome, String localizacao, Poder poder) {
+        this.nome = nome;
+        this.localizacao = localizacao;
+        this.poder = poder;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public Poder getPoder() {
+        return poder;
+    }
+
+    @Override
+    public abstract String obterCoordenadas();
+}
+
+//CLASSE YOUKAI
+class Youkai extends Entidade {
+    public Youkai(String nome, String localizacao, Poder poder) {
+        super(nome, localizacao, poder);
+    }
+
+    @Override
+    public String obterCoordenadas() {
+        return "Youkai " + nome + " localizado em " + localizacao + " (Poder: " + poder + ")";
+    }
+}
+
+//CLASSE ALIEN
+class Alien extends Entidade {
+    private String planetaOrigem;
+    private String tipoOni;
+
+    public Alien(String nome, String planetaOrigem, String tipoOni, Poder poder) {
+        super(nome, planetaOrigem, poder);
+        this.planetaOrigem = planetaOrigem;
+        this.tipoOni = tipoOni;
+    }
+
+    public String getPlanetaOrigem() {
+        return planetaOrigem;
+    }
+
+    public String getTipoOni() {
+        return tipoOni;
+    }
+
+    @Override
+    public String obterCoordenadas() {
+        return "Alien " + nome + " do planeta " + planetaOrigem + 
+               " (Tipo: " + tipoOni + ", Poder: " + poder + ")";
+    }
+}
+
+//CLASSE REGISTROS
+class Registros {
+    private String nomeEquipe;
+    private HashMap<String, Entidade> avistamentos;
+
+    public Registros(String nomeEquipe) {
+        this.nomeEquipe = nomeEquipe;
+        this.avistamentos = new HashMap<>();
+    }
+
+    public boolean registrarAvistamento(Entidade entidade) {
+        if (avistamentos.containsKey(entidade.getNome())) {
+            System.out.println("Entidade '" + entidade.getNome() + "' já registrada.");
+            return false;
+        } else {
+            avistamentos.put(entidade.getNome(), entidade);
+            System.out.println("Novo avistamento registrado: " + entidade.obterCoordenadas());
+            return true;
+        }
+    }
+
+    public void listarAvistamentos() {
+        System.out.println("\nAvistamentos registrados pela equipe " + nomeEquipe + " ");
+        for (Entidade e : avistamentos.values()) {
+            System.out.println("- " + e.obterCoordenadas());
+        }
+    }
+}
+
+//CLASSE PRINCIPAL
+public class Main {
+    public static void main(String[] args) {
+        //Criando poderes
+        Poder telepatia = new Poder("Telepatia");
+        Poder ilusao = new Poder("Ilusão");
+        Poder metamorfose = new Poder("Metamorfose");
+
+        //Criando entidades
+        Alien alien1 = new Alien("Zorg", "Marte", "Guerreiro", telepatia);
+        Youkai youkai1 = new Youkai("Kitsune", "Monte Fuji", ilusao);
+        Youkai youkai2 = new Youkai("Oni Azul", "Caverna Sombria", metamorfose);
+
+        //Criando registro
+        Registros registros = new Registros("Detetives Ocultos");
+
+        //Registrando entidades
+        registros.registrarAvistamento(alien1);
+        registros.registrarAvistamento(youkai1);
+        registros.registrarAvistamento(youkai2);
+        registros.registrarAvistamento(youkai1); //tentativa duplicada
+
+        //Listando todos os registros
+        registros.listarAvistamentos();
+    }
+}
