@@ -1,0 +1,120 @@
+import java.util.ArrayList;
+
+class Cafe {
+    private String nome;
+    private double precoBase;
+
+    public Cafe(String nome, double precoBase) {
+        this.nome = nome;
+        this.precoBase = precoBase;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public double getPrecoBase() {
+        return precoBase;
+    }
+
+    public void setPrecoBase(double precoBase) {
+        this.precoBase = precoBase;
+    }
+
+    public double calcularPrecoFinal() {
+        return precoBase;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " - R$ " + String.format("%.2f", calcularPrecoFinal());
+    }
+}
+
+class CafeGourmet extends Cafe {
+    private double bonusAroma;
+
+    public CafeGourmet(String nome, double precoBase, double bonusAroma) {
+        super(nome, precoBase);
+        this.bonusAroma = bonusAroma;
+    }
+
+    public double getBonusAroma() {
+        return bonusAroma;
+    }
+
+    public void setBonusAroma(double bonusAroma) {
+        this.bonusAroma = bonusAroma;
+    }
+
+    @Override
+    public double calcularPrecoFinal() {
+        return super.calcularPrecoFinal() + bonusAroma;
+    }
+}
+
+class Menu {
+    private ArrayList<Cafe> items;
+
+    public Menu(ArrayList<Cafe> items) {
+        this.items = items;
+    }
+
+    public void adicionarItem(Cafe cafe) {
+        items.add(cafe);
+    }
+
+    public ArrayList<Cafe> getItems() {
+        return items;
+    }
+
+    public void exibirMenu() {
+        System.out.println("= Menu da Cafeteria =");
+        for (Cafe c : items) {
+            System.out.println(c);
+        }
+    }
+}
+
+class CafeLeblanc {
+    private Menu menu;
+
+    public CafeLeblanc(Menu menu) {
+        this.menu = menu;
+    }
+
+    public void receberPedido(Cafe cafe) {
+        System.out.println("Pedido recebido: " + cafe.getNome() + 
+                           " | Valor final: R$ " + String.format("%.2f", cafe.calcularPrecoFinal()));
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Cafe> listaCafes = new ArrayList<>();
+        Menu menu = new Menu(listaCafes);
+
+        // Adicionando cafés ao menu
+        menu.adicionarItem(new Cafe("Café Expresso", 5.00));
+        menu.adicionarItem(new CafeGourmet("Café Leblanc Especial", 8.00, 2.50));
+        menu.adicionarItem(new Cafe("Café com Leite", 6.00));
+
+        // Criando a cafeteria com o menu
+        CafeLeblanc cafeteria = new CafeLeblanc(menu);
+
+        // Exibindo o menu
+        cafeteria.getMenu().exibirMenu();
+
+        // Recebendo um pedido
+        System.out.println();
+        cafeteria.receberPedido(new CafeGourmet("Café Leblanc Especial", 8.00, 2.50));
+    }
+}
