@@ -1,0 +1,140 @@
+import java.util.*;
+
+//CLASSE PADRÃO DE ATAQUE
+class PadraoAtaque {
+    private String nome;
+    private int dano;
+
+    public PadraoAtaque(String nome, int dano) {
+        this.nome = nome;
+        this.dano = dano;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getDano() {
+        return dano;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " (" + dano + " de dano)";
+    }
+}
+
+//CLASSE BOSS
+class Boss {
+    protected String nome;
+    protected String idBoss;
+    protected String pontoFraco;
+    protected LinkedHashSet<PadraoAtaque> moveset;
+
+    public Boss(String nome, String idBoss, String pontoFraco) {
+        this.nome = nome;
+        this.idBoss = idBoss;
+        this.pontoFraco = pontoFraco;
+        this.moveset = new LinkedHashSet<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getIdBoss() {
+        return idBoss;
+    }
+
+    public String getPontoFraco() {
+        return pontoFraco;
+    }
+
+    public void adicionarAtaque(PadraoAtaque ataque) {
+        moveset.add(ataque);
+    }
+
+    public void iniciarFase() {
+        System.out.println("\nIniciando a fase contra o Boss: " + nome);
+        System.out.println("Ponto fraco: " + pontoFraco);
+        System.out.println("Moveset:");
+        for (PadraoAtaque ataque : moveset) {
+            System.out.println(" - " + ataque);
+        }
+    }
+}
+
+//CLASSE BOSSMAGICO (HERDA DE BOSS)
+class BossMagico extends Boss {
+
+    public BossMagico(String nome, String idBoss, String pontoFraco) {
+        super(nome, idBoss, pontoFraco);
+    }
+
+    @Override
+    public void iniciarFase() {
+        System.out.println("\nIniciando a fase contra o Boss Mágico: " + nome);
+        System.out.println("Ponto fraco mágico: " + pontoFraco);
+        System.out.println("Movimentos arcanos detectados:");
+        for (PadraoAtaque ataque : moveset) {
+            System.out.println(" * " + ataque);
+        }
+        System.out.println("Prepare-se para o duelo.");
+    }
+}
+
+//CLASSE BATALHA
+class Batalha {
+    private HashMap<String, Boss> arena;
+
+    public Batalha(HashMap<String, Boss> arena) {
+        this.arena = arena;
+    }
+
+    public void adicionarBoss(Boss boss) {
+        arena.put(boss.getIdBoss(), boss);
+        System.out.println("Boss " + boss.getNome() + " adicionado à arena com ID " + boss.getIdBoss());
+    }
+
+    public void iniciarBatalha(String idBoss) {
+        Boss boss = arena.get(idBoss);
+        if (boss != null) {
+            boss.iniciarFase();
+        } else {
+            System.out.println("Nenhum boss encontrado com o ID: " + idBoss);
+        }
+    }
+}
+
+//CLASSE PRINCIPAL
+public class Main {
+    public static void main(String[] args) {
+        //Criando alguns padrões de ataque
+        PadraoAtaque golpeForte = new PadraoAtaque("Golpe Forte", 25);
+        PadraoAtaque rajadaSombria = new PadraoAtaque("Rajada Sombria", 40);
+        PadraoAtaque feitiçoExplosivo = new PadraoAtaque("Feitiço Explosivo", 50);
+        PadraoAtaque investida = new PadraoAtaque("Investida Brutal", 30);
+
+        //Criando bosses
+        Boss boss1 = new Boss("Gorath", "B001", "Ataques à distância");
+        boss1.adicionarAtaque(golpeForte);
+        boss1.adicionarAtaque(investida);
+
+        BossMagico boss2 = new BossMagico("Azrath, o Feiticeiro", "B002", "Magia");
+        boss2.adicionarAtaque(rajadaSombria);
+        boss2.adicionarAtaque(feitiçoExplosivo);
+
+        //Criando arena e batalha
+        HashMap<String, Boss> arena = new HashMap<>();
+        Batalha batalha = new Batalha(arena);
+
+        //Adicionando bosses à arena
+        batalha.adicionarBoss(boss1);
+        batalha.adicionarBoss(boss2);
+
+        //Iniciando batalhas
+        batalha.iniciarBatalha("B001");
+        batalha.iniciarBatalha("B002");
+        batalha.iniciarBatalha("B999"); // Teste para ID inexistente
+    }
+}
