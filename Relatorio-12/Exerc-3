@@ -1,0 +1,67 @@
+-- Definição do tipo Banda
+data Banda = Banda
+  { nomeBanda :: String
+  , genero    :: String
+  , cache     :: Double
+  } deriving (Show)
+
+-- Status do evento
+data Status = Ativo | Encerrado | Cancelado
+  deriving (Show, Eq)
+
+-- Definição do tipo Evento
+data Evento = Evento
+  { nomeEvento :: String
+  , bandas     :: [Banda]
+  , status     :: Status
+  } deriving (Show)
+
+-- Função para calcular o custo total do evento
+-- Soma todos os cachês, adiciona 20% de taxa de produção,
+-- mas retorna 0.0 se o evento estiver cancelado
+custoTotalEvento :: Evento -> Double
+custoTotalEvento (Evento _ _ Cancelado) = 0.0
+custoTotalEvento (Evento _ lista _) = total + (total * 0.20)
+  where total = sum (map cache lista)
+
+-- Função que retorna a banda de abertura
+bandaAbertura :: Evento -> String
+bandaAbertura (Evento _ [] _) = "Nenhuma banda cadastrada para abrir o evento."
+bandaAbertura (Evento _ (b:_) _) = "Banda de abertura: " ++ nomeBanda b
+
+-- Função que retorna a banda de encerramento
+bandaEncerramento :: Evento -> String
+bandaEncerramento (Evento _ [] _) = "Nenhuma banda cadastrada para encerrar o evento."
+bandaEncerramento (Evento _ lista _) = "Banda de encerramento: " ++ nomeBanda (last lista)
+
+-- Main
+main :: IO ()
+main = do
+  -- Bandas
+  let b1 = Banda "The Kokiris" "Folk" 5000.0
+      b2 = Banda "Gerudo Queens" "Rock" 8000.0
+      b3 = Banda "Zora Waves" "Pop" 6000.0
+      b4 = Banda "Goron Drums" "Metal" 7000.0
+
+  -- Eventos
+  let evento1 = Evento "Festival de Hyrule" [b1, b2, b3] Ativo
+      evento2 = Evento "Noite das Gerudo" [b2, b4] Encerrado
+      evento3 = Evento "Show Cancelado" [b1, b3] Cancelado
+
+  putStrLn "=== EVENTO 1 ==="
+  putStrLn $ "Nome: " ++ nomeEvento evento1
+  putStrLn $ bandaAbertura evento1
+  putStrLn $ bandaEncerramento evento1
+  putStrLn $ "Custo total: R$ " ++ show (custoTotalEvento evento1)
+
+  putStrLn "\n=== EVENTO 2 ==="
+  putStrLn $ "Nome: " ++ nomeEvento evento2
+  putStrLn $ bandaAbertura evento2
+  putStrLn $ bandaEncerramento evento2
+  putStrLn $ "Custo total: R$ " ++ show (custoTotalEvento evento2)
+
+  putStrLn "\n=== EVENTO 3 ==="
+  putStrLn $ "Nome: " ++ nomeEvento evento3
+  putStrLn $ bandaAbertura evento3
+  putStrLn $ bandaEncerramento evento3
+  putStrLn $ "Custo total: R$ " ++ show (custoTotalEvento evento3)
