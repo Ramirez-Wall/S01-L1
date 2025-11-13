@@ -1,0 +1,76 @@
+-- Definição do tipo Servico
+data Servico = Servico
+  { nomeServico :: String
+  , tipoServico :: String
+  , precoBase   :: Double
+  } deriving (Show)
+
+-- Status do atendimento
+data Status = EmAndamento | Finalizado | Cancelado
+  deriving (Show, Eq)
+
+-- Definição do tipo Atendimento
+data Atendimento = Atendimento
+  { servicos :: [Servico]
+  , statusAtendimento :: Status
+  } deriving (Show)
+
+-- Função que calcula o bônus espiritual
+-- - Soma os preços dos serviços
+-- - Aplica +25% se houver mais de 3 serviços
+-- - Aplica -10% se o total ultrapassar 500
+bonusEspiritual :: [Servico] -> Double
+bonusEspiritual lista =
+  let totalBase = sum (map precoBase lista)
+      totalComBonus
+         length lista > 3 = totalBase * 1.25  -- bônus de 25%
+         otherwise         = totalBase
+      totalFinal
+         totalComBonus > 500 = totalComBonus * 0.90  -- desconto de 10%
+         otherwise            = totalComBonus
+  in totalFinal
+
+-- Função que calcula o valor final do atendimento
+valorFinalAtendimento :: Atendimento -> Double
+valorFinalAtendimento (Atendimento _ Cancelado) = 0.0
+valorFinalAtendimento (Atendimento lista _) = bonusEspiritual lista
+
+-- Função que retorna a descrição do primeiro serviço
+descricaoPrimeiroServico :: Atendimento -> String
+descricaoPrimeiroServico (Atendimento [] _) =
+  "Nenhum serviço foi registrado neste atendimento."
+descricaoPrimeiroServico (Atendimento (s:_) _) =
+  "Primeiro serviço: " ++ nomeServico s ++ " (" ++ tipoServico s ++ ")"
+
+-- Main
+main :: IO ()
+main = do
+  -- Serviços disponíveis
+  let banho1 = Servico "Banho de Ervas" "Banho" 120.0
+      massagem1 = Servico "Massagem Espiritual" "Massagem" 200.0
+      banquete1 = Servico "Banquete dos Espíritos" "Banquete" 250.0
+      limpeza = Servico "Limpeza Energética" "Banho" 180.0
+      aromaterapia = Servico "Aromaterapia" "Relaxamento" 90.0
+
+  -- Atendimentos variados
+  let atendimento1 = Atendimento [banho1, massagem1] EmAndamento     -- 2 serviços
+      atendimento2 = Atendimento [banho1, massagem1, banquete1, limpeza] Finalizado -- 4 serviços (bônus 25%)
+      atendimento3 = Atendimento [banho1, massagem1, banquete1, limpeza, aromaterapia] Finalizado -- total > 500 → desconto 10%
+      atendimento4 = Atendimento [massagem1, banquete1] Cancelado     -- cancelado → valor 0
+
+  -- Exibindo resultados
+  putStrLn "=== ATENDIMENTO 1 ==="
+  putStrLn $ descricaoPrimeiroServico atendimento1
+  putStrLn $ "Valor final: R$ " ++ show (valorFinalAtendimento atendimento1)
+
+  putStrLn "\n=== ATENDIMENTO 2 ==="
+  putStrLn $ descricaoPrimeiroServico atendimento2
+  putStrLn $ "Valor final (bônus 25%): R$ " ++ show (valorFinalAtendimento atendimento2)
+
+  putStrLn "\n=== ATENDIMENTO 3 ==="
+  putStrLn $ descricaoPrimeiroServico atendimento3
+  putStrLn $ "Valor final (bônus 25% + desconto 10%): R$ " ++ show (valorFinalAtendimento atendimento3)
+
+  putStrLn "\n=== ATENDIMENTO 4 ==="
+  putStrLn $ descricaoPrimeiroServico atendimento4
+  putStrLn $ "Valor final (cancelado): R$ " ++ show (valorFinalAtendimento atendimento4)
