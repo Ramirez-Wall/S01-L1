@@ -1,0 +1,51 @@
+-- Definição do tipo Item
+data Item = Item
+  { nomeItem     :: String
+  , categoria    :: String
+  , precoItem    :: Double
+  } deriving (Show)
+
+-- Definição do tipo CompraZelda
+-- Uma compra contém uma lista de itens
+data CompraZelda = CompraZelda
+  { itens :: [Item]
+  } deriving (Show)
+
+-- Função que calcula o desconto
+-- 10% de desconto se o total dos itens for maior que 200
+calculaDesconto :: [Item] -> Double
+calculaDesconto lista
+  | total > 200 = total * 0.10
+  | otherwise   = 0
+  where total = sum (map precoItem lista)
+
+-- Função que calcula o valor final da compra
+valorFinal :: CompraZelda -> Double
+valorFinal (CompraZelda lista)
+  | total > 200 = total - desconto      -- aplica desconto de 10%
+  | otherwise   = total + 15.0          -- adiciona frete fixo
+  where
+    total = sum (map precoItem lista)
+    desconto = calculaDesconto lista
+
+-- main
+main :: IO ()
+main = do
+  -- Criação de alguns itens
+  let espada = Item "Espada Mestre" "Arma" 150.0
+      escudo = Item "Escudo Hyliano" "Equipamento" 120.0
+      pocao  = Item "Poção de Vida" "Poção" 50.0
+      arco   = Item "Arco do Herói" "Arma" 90.0
+
+  -- Exemplo de compras
+  let compra1 = CompraZelda [espada, escudo]  -- total 270 > 200 → desconto
+      compra2 = CompraZelda [pocao, arco]     -- total 140 ≤ 200 → frete
+
+  -- Exibindo resultados
+  putStrLn "=== Compra 1 ==="
+  print (itens compra1)
+  putStrLn $ "Valor final: " ++ show (valorFinal compra1)
+
+  putStrLn "\n=== Compra 2 ==="
+  print (itens compra2)
+  putStrLn $ "Valor final: " ++ show (valorFinal compra2)
