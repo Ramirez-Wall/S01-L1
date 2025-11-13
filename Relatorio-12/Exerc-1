@@ -1,0 +1,40 @@
+-- Definição do tipo Bebida
+data Bebida = Bebida
+  { nome  :: String
+  , tipo  :: String
+  , preco :: Float
+  } deriving (Show)
+
+-- Definição do tipo Status
+data Status = Aberto | Entregue | Cancelado
+  deriving (Show, Eq)
+
+-- Definição do tipo Pedido
+data Pedido = Pedido
+  { bebidas :: [Bebida]
+  , status  :: Status
+  } deriving (Show)
+
+-- Função para calcular o valor total do pedido
+valorTotalPedido :: Pedido -> Float
+valorTotalPedido (Pedido _ Cancelado) = 0
+valorTotalPedido (Pedido bs _) = sum (map preco bs) + 5.0
+
+-- Função que retorna o nome da primeira bebida
+primeiraBebida :: Pedido -> String
+primeiraBebida (Pedido [] _) = "Nenhuma bebida no pedido."
+primeiraBebida (Pedido (b:_) _) = nome b
+
+-- Main
+main :: IO ()
+main = do
+  let b1 = Bebida "Café Expresso" "Café" 7.5
+      b2 = Bebida "Chá Verde" "Chá" 6.0
+      b3 = Bebida "Suco de Laranja" "Suco" 8.0
+
+      pedido1 = Pedido [b1, b2, b3] Aberto
+      pedido2 = Pedido [] Cancelado
+
+  putStrLn $ "Primeira bebida do pedido1: " ++ primeiraBebida pedido1
+  putStrLn $ "Valor total do pedido1: R$ " ++ show (valorTotalPedido pedido1)
+  putStrLn $ "Valor total do pedido2 (cancelado): R$ " ++ show (valorTotalPedido pedido2)
