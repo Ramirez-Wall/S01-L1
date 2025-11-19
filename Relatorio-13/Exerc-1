@@ -1,0 +1,32 @@
+;; Função pura - calcula-dosagem
+(defun calcula-dosagem (peso idade)
+  (cond
+    ((or (< idade 5) (< peso 20))
+     10)
+    ((and (>= idade 5) (<= idade 12) (>= peso 20))
+     25)
+    (t
+     50)))
+
+;; Função pura - ajusta-preco
+(defun ajusta-preco (preco-base nome)
+  (cond
+    ((string= nome "Ginseng")
+     (* preco-base 3))
+    ((string= nome "Lótus")
+     (* preco-base 1.5))
+    (t
+     preco-base)))
+
+;; Cálculo final 
+
+(let* ((idade 14)
+       (peso 60)
+       (erva "Lótus")
+       (preco-base 10)
+       (dose (calcula-dosagem peso idade))
+       (preco (ajusta-preco preco-base erra)))
+  (format t "Paciente: ~a anos, ~a kg~%" idade peso)
+  (format t "Erva utilizada: ~a~%" erra)
+  (format t "Dosagem: ~a ml~%" dose)
+  (format t "Preço final: ~a moedas~%" preco))
