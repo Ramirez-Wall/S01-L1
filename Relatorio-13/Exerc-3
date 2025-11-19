@@ -1,0 +1,78 @@
+;; Estrutura e Catálogo
+(defstruct item
+  nome
+  tipo      ;; "Arma" | "Pocao" | "Artefato"
+  preco
+  forca-magica)
+
+(defparameter *catalogo*
+  (list
+    ;; Armas
+    (make-item :nome "Espada Sombria"
+               :tipo "Arma"
+               :preco 200
+               :forca-magica 70)
+
+    (make-item :nome "Machado do Abismo"
+               :tipo "Arma"
+               :preco 300
+               :forca-magica 120)
+
+    ;; Poções
+    (make-item :nome "Poção de Sangue"
+               :tipo "Pocao"
+               :preco 50
+               :forca-magica 20)
+
+    ;; Artefatos
+    (make-item :nome "Amuleto da Tormenta"
+               :tipo "Artefato"
+               :preco 500
+               :forca-magica 200)))
+
+
+;; Funções de Transformação 
+
+;; Função pura - aumenta preço em 15%
+(defun adiciona-imposto (preco)
+  (* preco 1.15))
+
+;; Função pura - bônus de maldição
+(defun bonus-maldicao (forca)
+  (if (> forca 80)
+      (* forca 1.5)
+      forca))
+
+
+;;Função principal - processa-venda 
+
+(defun processa-venda (catalogo)
+  "Filtra armas; aumenta preço via mapcar + lambda; retorna nome e nova força mágica."
+  (let* (;; Filtro — apenas itens tipo Arma
+         (armas (remove-if-not
+                 (lambda (i) (string= (item-tipo i) "Arma"))
+                 catalogo))
+
+         ;; Mapeamento 1 — aplicar imposto ao preço
+         (armas-com-imposto
+          (mapcar (lambda (i)
+                    (make-item
+                     :nome (item-nome i)
+                     :tipo (item-tipo i)
+                     :preco (adiciona-imposto (item-preco i))
+                     :forca-magica (item-forca-magica i)))
+                  armas))
+
+         ;; Mapeamento 2 — relatório nome + nova força mágica
+         (relatorio
+          (mapcar (lambda (i)
+                    (format nil "~a -> Força Mágica Final: ~a"
+                            (item-nome i)
+                            (bonus-maldicao (item-forca-magica i))))
+                  armas-com-imposto)))
+
+    relatorio))
+
+(format t "~%=== RELATÓRIO FINAL ===~%")
+(dolist (linha (processa-venda *catalogo*))
+  (format t "~a~%" linha))
