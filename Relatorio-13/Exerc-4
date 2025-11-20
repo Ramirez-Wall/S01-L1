@@ -1,0 +1,40 @@
+;; Estrutura OCORRENCIA
+
+(defstruct ocorrencia
+  nome
+  ritual
+  nivel-medo
+  agentes-enviados)
+
+;; Função Recursiva soma recursivamente os valores do campo nivel-medo
+
+(defun soma-medo-recursiva (lista-ocorrencias)
+  (if (null lista-ocorrencias)
+      0
+      (+ (ocorrencia-nivel-medo (car lista-ocorrencias))
+         (soma-medo-recursiva (cdr lista-ocorrencias)))))
+
+;; Função de Alto Nível
+
+(defun analise-final (lista-ocorrencias)
+  ;; LET cria escopo local
+  (let* ((total-medo (soma-medo-recursiva lista-ocorrencias))
+         (media-medo (/ total-medo (length lista-ocorrencias))))
+    
+    ;; FILTER + LAMBDA selecionam os nomes críticos
+    (mapcar #'ocorrencia-nome
+            (remove-if-not
+             (lambda (oc)
+               (and (> (ocorrencia-agentes-enviados oc) 3)
+                    (> (ocorrencia-nivel-medo oc) media-medo)))
+             lista-ocorrencias))))
+
+(defparameter *lista-ocorrencias*
+  (list
+   (make-ocorrencia :nome "Sombra Antiga" :ritual "Invocacao" :nivel-medo 80 :agentes-enviados 5)
+   (make-ocorrencia :nome "Ecos da Cripta" :ritual "Evocacao" :nivel-medo 40 :agentes-enviados 2)
+   (make-ocorrencia :nome "Lamento do Abismo" :ritual "Abertura" :nivel-medo 95 :agentes-enviados 4)
+   (make-ocorrencia :nome "Vulto Errante" :ritual "Perturbacao" :nivel-medo 20 :agentes-enviados 1)
+   (make-ocorrencia :nome "Arauto Noturno" :ritual "Conjuracao" :nivel-medo 70 :agentes-enviados 6)))
+
+(analise-final *lista-ocorrencias*)
